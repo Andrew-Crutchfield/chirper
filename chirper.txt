@@ -1,0 +1,121 @@
+create table users (  id INT AUTO_INCREMENT primary key,     handle varchar(255) NOT NULL UNIQUE,     email varchar(255) NOT NULL UNIQUE,      created_at Timestamp default current_timestamp )
+
+CREATE TABLE chirps (     id INT AUTO_INCREMENT PRIMARY KEY,     user_id INT,     body VARCHAR(255),     location VARCHAR(255),     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,     FOREIGN KEY (user_id) REFERENCES users(id) )
+
+INSERT INTO users (handle, email) VALUES ('SpaceMarine', 'space_marine@imperium.com')
+INSERT INTO users (handle, email) VALUES ('EldarFarseer', 'farseer@craftworld.net')
+INSERT INTO users (handle, email) VALUES ('OrkWarboss', 'warboss@waaagh.org')
+INSERT INTO users (handle, email) VALUES ('NecronLord', 'necronlord@dynasty.com')
+INSERT INTO users (handle, email) VALUES ('TauCommander', 'taucommander@greatergood.co')
+
+INSERT INTO chirps (user_id, body, location)
+VALUES (1, 'Just finished a 2,000 point battle and my Space Marines prevailed! For the Emperor!', 'Terra');
+INSERT INTO chirps (user_id, body, location)
+VALUES (1, 'waiting to go to mars hopefuly big news', 'luna');
+INSERT INTO chirps (user_id, body, location)
+VALUES (1, 'this admech meating could have been a voxmail', 'mars');
+INSERT INTO chirps (user_id, body, location)
+VALUES (1, 'back to home', 'Terra');
+INSERT INTO chirps (user_id, body, location)
+VALUES (1, 'got a cool new chain sword to day!', 'Terra');
+
+INSERT INTO chirps (user_id, body, location)
+VALUES (2, "The runes have spoken, a great peril approaches. We must heed their warning.", "Biel-Tan");
+INSERT INTO chirps (user_id, body, location)
+VALUES (2, "Guiding the wraithbone choir to craft new Wraithguard. Their souls awaken.", "Iyanden");
+INSERT INTO chirps (user_id, body, location)
+VALUES (2, "A Conclave of Seers will be held. The strands of the future are entangled and dark.", "Saim-Hann");
+INSERT INTO chirps (user_id, body, location)
+VALUES (2, "Engaged the forces of the Great Devourer. The skein of war is ever present.", "Isha's Tears");
+INSERT INTO chirps (user_id, body, location)
+VALUES (2,  "We must preserve the ancient wisdom of our people, lest it be lost to the void.", "The Black Library");
+
+INSERT INTO chirps (user_id, body, location)
+VALUES (3,  "Gettin' da boyz together for a proper WAAAGH! It's smashin' time!", "Gorkamorka");
+INSERT INTO chirps (user_id, body, location)
+VALUES (3,  "Da Mekboyz built a stompa that's da biggest an' da baddest!", "Mektown");
+INSERT INTO chirps (user_id, body, location)
+VALUES (3,  "We looted some 'umie tanks today. Gonna paint 'em red so dey go fasta!", "Skarboyz Camp");
+INSERT INTO chirps (user_id, body, location)
+VALUES (3,  "Found a planet that's ripe for a fight. Time to drop in and krump 'em good!", "Rok in Orbit");
+INSERT INTO chirps (user_id, body, location)
+VALUES (3,  "Dem Space Marines think they can take us? We'll show 'em what a real fight is!", "Barbarus Prime");
+
+INSERT INTO chirps (user_id, body, location)
+VALUES (4,  "Awakening the legions from their slumber. A new dynasty shall reign.", "Sautekh Tomb Complex");
+INSERT INTO chirps (user_id, body, location)
+VALUES (4,  "The Crypteks have perfected a new form of gauss weaponry. The galaxy will tremble.", "Maynarkh Dynasty");
+INSERT INTO chirps (user_id, body, location)
+VALUES (4,  "Sending forth the monoliths to crush the upstart races that dare oppose us.", "Nihilakh Territory");
+INSERT INTO chirps (user_id, body, location)
+VALUES (4,  "The Triarch Praetorians enforce order. None shall defy the will of the Silent King.", "Triarch Stasis Vault");
+INSERT INTO chirps (user_id, body, location)
+VALUES (4, "Scouring the stars for the Blackstone. Our power will be unmatched.", "Gheden System");
+
+INSERT INTO chirps (user_id, body, location)
+VALUES (5,  "Advancing the frontiers of the Tau Empire. Every caste contributes to the cause.", "Vior'la Sept");
+INSERT INTO chirps (user_id, body, location)
+VALUES (5,  "The Ethereals have spoken. We march to bring the Greater Good to new worlds.", "T'au Command Center");
+INSERT INTO chirps (user_id, body, location)
+VALUES (5,  "Our Fire Warriors stand ready to face the enemy. For the Greater Good!", "Dal'yth Frontline");
+INSERT INTO chirps (user_id, body, location)
+VALUES (5,  "The Kroot and Vespid allies have joined our cause. Diversity is our strength.", "Ksi'm'yen Orbit");
+INSERT INTO chirps (user_id, body, location)
+VALUES (5,   "Testing new battlesuit technology. The Earth caste has outdone themselves.", "Fio'vash Testing Grounds");
+
+
+INSERT INTO users (handle, email) VALUES ('InquisitorMalleus', 'inquisitormalleus@ordohereticus.imperium');
+
+SELECT u.handle, u.email, c.body
+FROM chirps c
+JOIN users u ON c.user_id = u.id;
+
+SELECT u.handle, u.email, c.body, c.created_at
+FROM chirps c
+JOIN users u ON c.user_id = u.id;
+
+SELECT u.handle, u.email, c.body, c.created_at
+FROM users u
+LEFT JOIN chirps c ON u.id = c.user_id;
+
+CREATE TABLE mentions (
+    mention_id INT AUTO_INCREMENT PRIMARY KEY,
+    chirp_id INT,
+    user_id INT,
+    FOREIGN KEY (chirp_id) REFERENCES chirps(id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+INSERT INTO chirps (user_id, body, location)
+VALUES (2, "Had a great discussion with @SpaceMarine about ancient strategies. Wisdom knows no allegiance.", 'Ulthwé');
+
+INSERT INTO chirps (user_id, body, location)
+VALUES (4,  "Advancing the frontiers of the Tau Empire. Every caste contributes to the cause.", "Lab");
+
+INSERT INTO chirps (user_id, body, location)
+VALUES (5,  "Advancing the frontiers of the Tau Empire. Every caste contributes to the cause.", "base");
+
+INSERT INTO mentions (chirp_id, user_id)
+VALUES (10, 1);
+
+INSERT INTO mentions (chirp_id, user_id)
+VALUES ([the new chirp_id], 2);
+
+SELECT 
+    c.id AS chirp_id,
+    c.body AS chirp_body,
+    c.location AS chirp_location,
+    c.created_at AS chirp_created_at,
+    u.handle AS author_handle,
+    u.email AS author_email,
+    m.user_id AS mentioned_user_id,
+    mu.handle AS mentioned_handle,
+    mu.email AS mentioned_email
+FROM 
+    mentions m
+JOIN 
+    chirps c ON m.chirp_id = c.id
+JOIN 
+    users u ON c.user_id = u.id
+JOIN 
+    users mu ON m.user_id = mu.id;
